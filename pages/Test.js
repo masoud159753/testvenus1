@@ -2,15 +2,18 @@
 import  React,{useState,useEffect} from 'react';
 import {View, TextInput, TouchableOpacity, FlatList, Image, Text} from 'react-native';
 import Style from './../styles/style';
+import {useDispatch,useSelector} from 'react-redux';
+import {addIncome,addData} from "../src/features/testSlice";
+
 //import required library and components
 
 
 
 const TestScreen=({navigation})=>{
 
-
-    const [data,setData]=useState([]);
-
+    const dispatch=useDispatch();
+    const income=useSelector(state => state.income.value);
+    const data=useSelector(state => state.income.userData);
 
     useEffect(()=>{
 
@@ -24,7 +27,7 @@ const TestScreen=({navigation})=>{
                             }
                         });
                         const responseJson=await response.json();
-                        setData(responseJson);
+                        dispatch(addData(responseJson));
                 };
                 getData();
         }
@@ -38,7 +41,9 @@ const TestScreen=({navigation})=>{
 
         function Item({name,username}) {
             return(
-                <TouchableOpacity style={Style.TouchView} onPress={()=>alert('Test event! '+name)}>
+                <TouchableOpacity style={Style.TouchView} onPress={()=>{
+                    dispatch(addIncome(10))
+                }} >
                     <Image  source={require('./../image/conversation.png')} style={Style.ImageStyle}/>
                     <View style={Style.View}>
                         <Text style={Style.TextView}>{name}</Text>
@@ -46,7 +51,7 @@ const TestScreen=({navigation})=>{
                     </View>
 
                     <View style={Style.RightView}>
-                        <Text style={Style.TextRightView}>{'$2.00'}</Text>
+                        <Text style={Style.TextRightView}>{'$'+income}</Text>
                         <Text style={Style.TextRightViewBott}>{'100gr'}</Text>
                     </View>
 
